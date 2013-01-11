@@ -1,3 +1,5 @@
+# coding: utf-8
+
 import pygame
 from copy import copy
 from pygame.locals import *
@@ -64,11 +66,11 @@ def MPB():
 pygame.init()
 pygame.font.init()
 
-musica = pygame.mixer.Sound("BGM\Firelink Shrine.wav")
+musica = pygame.mixer.Sound("BGM/Firelink Shrine.wav")
 tela = pygame.display.set_mode((800,600))
 pygame.display.set_caption("rpg")
 clock = pygame.time.Clock()
-fundo = pygame.image.load("imagens\cenario2.png")
+fundo = pygame.image.load("imagens/cenario2.png")
 tela.blit(fundo,(0,0))
 
 #================================
@@ -76,15 +78,15 @@ tela.blit(fundo,(0,0))
 grupo = RenderUpdates()
 personagem = Personagem(20,290,grupo)
 npc = Npcs(650,290,grupo)
-npc.image = pygame.image.load("sprites\personagem2.png")
+npc.image = pygame.image.load("sprites/personagem2.png")
 npc.converterImagem()
 
 npc2 = Npcs(675,240,grupo)
-npc2.image = pygame.image.load("sprites\personagem.png")
+npc2.image = pygame.image.load("sprites/personagem.png")
 npc2.converterImagem()
 
 npc3 = Npcs(675,340,grupo)
-npc3.image = pygame.image.load("sprites\personagem.png")
+npc3.image = pygame.image.load("sprites/personagem.png")
 npc3.converterImagem()
 frase = Textos(20,'Quem é você e oque faz aqui?')
 

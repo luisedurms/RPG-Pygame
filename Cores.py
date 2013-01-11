@@ -1,3 +1,5 @@
+# coding: utf-8
+
 # Módulo de Cores do jogo
 #========================
  #Cores
