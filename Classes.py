@@ -7,10 +7,10 @@ from pygame.sprite import Sprite,RenderUpdates
 from Cores import *
 
 
-listaImagensFrente = ["sprites\danteFrente1.png","sprites\danteFrente2.png","sprites\danteFrente3.png"]
-listaImagensLadoEsquerdo = ["sprites\danteLadoEsquerdo1.png","sprites\danteLadoEsquerdo2.png","sprites\danteLadoEsquerdo3.png"]
-listaImagensLadoDireito = ["sprites\danteLadoDireito1.png","sprites\danteLadoDireito2.png","sprites\danteLadoDireito3.png"]
-listaImagensCostas = ["sprites\danteCostas1.png","sprites\danteCostas2.png","sprites\danteCostas3.png"]
+listaImagensFrente = ["sprites/danteFrente1.png","sprites/danteFrente2.png","sprites/danteFrente3.png"]
+listaImagensLadoEsquerdo = ["sprites/danteLadoEsquerdo1.png","sprites/danteLadoEsquerdo2.png","sprites/danteLadoEsquerdo3.png"]
+listaImagensLadoDireito = ["sprites/danteLadoDireito1.png","sprites/danteLadoDireito2.png","sprites/danteLadoDireito3.png"]
+listaImagensCostas = ["sprites/danteCostas1.png","sprites/danteCostas2.png","sprites/danteCostas3.png"]
 #Classes
 class Personagem(Sprite):
   def __init__(self,pxInicial,pyInicial,*grupos):
@@ -40,7 +40,7 @@ class Npcs(Sprite):
     self.posY = posY
     Sprite.__init__(self,*grupos)
     self.rect = Rect(self.posX,self.posY,0,0)
-    self.image = pygame.image.load("sprites\personagem.png")
+    self.image = pygame.image.load("sprites/personagem.png")
     self.image.set_alpha( None, RLEACCEL ) # disable alpha
     self.image.convert()
     self.image.set_colorkey( magenta, RLEACCEL )
