@@ -1,13 +1,10 @@
 # coding: utf-8
 
-import pygame
-from pygame.locals import *
-from pygame.sprite import RenderUpdates
+from config import *
 from Classes import *
 from Cores import *
 
-# FPS
-FPS = 18
+FPS = 16
 
 filaF, filaC, filaE, filaD = 0, 0, 0, 0
 
@@ -60,19 +57,11 @@ def MPB():
 
 #=======================
 
-# Configurações iniciais
-pygame.init()
-pygame.font.init()
-
-musica = pygame.mixer.Sound("BGM/Firelink Shrine.wav")
-tela = pygame.display.set_mode((800, 600))
-pygame.display.set_caption("rpg")
-clock = pygame.time.Clock()
-fundo = pygame.image.load("imagens/cenario2.png")
-tela.blit(fundo, (0, 0))
+fundo, tela, clock = config()
 
 #================================
 #Criação de objetos
+musica = pygame.mixer.Sound("BGM/Firelink Shrine.wav")
 grupo = RenderUpdates()
 personagem = Personagem(20, 290, grupo)
 npc = Npcs(650, 290, grupo)
@@ -109,7 +98,6 @@ while True:
 
     for evento in pygame.event.get([KEYUP, KEYDOWN]):
         valor = (evento.type == KEYDOWN)
-        print(evento)
         if evento.key in teclas.keys():
             teclas[evento.key] = valor
     if teclas[27]:
