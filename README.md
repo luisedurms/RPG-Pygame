@@ -1,4 +1,4 @@
 RPG-Pygame
 ==========
 
-Pygame rpg
+Jogo de Rpg sendo desenvolvido com a biblioteca Pygame com o intuito de aprendizagem.
