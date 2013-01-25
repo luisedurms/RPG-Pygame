@@ -1,13 +1,13 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
 
 
 from config import *
 from Classes import *
 from Cores import *
-from cache import *
-from Vocab import *
-import sys
+
 import pygame
+import sys
+from pygame.sprite import Sprite, RenderUpdates
 
 
 FPS = 16
@@ -79,35 +79,26 @@ fundo, tela, clock = config()
 musica = pygame.mixer.Sound("BGM/Firelink Shrine.wav")
 grupo = RenderUpdates()
 personagem = Personagem(20, 290, grupo)
-npc = Npcs(650, 290, grupo)
-npc.image = pygame.image.load("sprites/personagem2.png")
+npc = Npcs(650, 290, "sprites/personagem2.png", grupo)
 npc.converterImagem()
 
-npc2 = Npcs(675, 240, grupo)
-npc2.image = pygame.image.load("sprites/personagem.png")
+npc2 = Npcs(675, 240, "sprites/personagem.png", grupo)
 npc2.converterImagem()
 
-npc3 = Npcs(675, 340, grupo)
-npc3.image = pygame.image.load("sprites/personagem.png")
+npc3 = Npcs(675, 340, "sprites/personagem.png", grupo)
 npc3.converterImagem()
-frase = Textos(20, 'Quem é você e oque faz aqui?')
-
+frase = Textos(40, 'Quem é voce e oque faz aqui?', 'carolingia.ttf')
+pygame.font.init()
 #===================================
 
-# Lista com pontos onde o personagem não poderá se mover
-lx = []
-a = -3
-for b in range(-4, 76):
-    lx.append(a)
-    a += 1
+lx = [b for b in range(-4, 76)]
 l1 = [-10]
 l2 = [6]
 
 #parede esquerda
+parede = [x for x in range(-10, 16)]
+colisaoParedeLateral = Eventos(parede, -2)
 
-parede = [-2, []]
-for a in range(-10, 7):
-    parede[1].append(a)
 
 #===================================
 iniciarConversa = [43, 0]
@@ -120,15 +111,15 @@ pygame.display.flip()
 while True:
     clock.tick(FPS)
 
-    for evento in pygame.event.get([KEYUP, KEYDOWN]):
-        valor = (evento.type == KEYDOWN)
-        if evento.key in teclas.keys():
-            teclas[evento.key] = valor
+    for e in pygame.event.get([KEYUP, KEYDOWN]):
+        valor = (e.type == KEYDOWN)
+        if e.key in teclas.keys():
+            teclas[e.key] = valor
 
     if teclas[27]:
-        #pygame.exit()
+        pygame.quit()
         sys.exit()
-    if personagem.px == parede[0] and personagem.py in parede[1]:
+    if  colisaoParedeLateral.estaDentro(personagem.py, personagem.px):
         MPD()
         MPB()
         MPC()
@@ -152,7 +143,7 @@ while True:
             tela.blit(frase.frases, (200, 500))
             pygame.display.flip()
 
-    #print(personagem.px, personagem.py)
+    print(personagem.px, personagem.py)
 
     grupo.clear(tela, fundo)
     pygame.display.update(grupo.draw(tela))
