@@ -1,149 +1,103 @@
 # -*- coding: utf-8 -*-
 
-
-from config import *
-from Classes import *
+import pygame
+from pygame.locals import *
+from pygame.sprite import Sprite
 from Cores import *
 
-import pygame
-import sys
-from pygame.sprite import Sprite, RenderUpdates
+listaImagensFrente = ["sprites/danteFrente1.png",
+                      "sprites/danteFrente2.png", "sprites/danteFrente3.png"]
+listaImagensLadoEsquerdo = ["sprites/danteLadoEsquerdo1.png",
+                            "sprites/danteLadoEsquerdo2.png", "sprites/danteLadoEsquerdo3.png"]
+listaImagensLadoDireito = ["sprites/danteLadoDireito1.png",
+                           "sprites/danteLadoDireito2.png", "sprites/danteLadoDireito3.png"]
+listaImagensCostas = ["sprites/danteCostas1.png",
+                      "sprites/danteCostas2.png", "sprites/danteCostas3.png"]
 
 
-FPS = 16
+#Classes
+class Personagem(Sprite):
+    '''
+    Classe que contem os dados do personagem, alem de carregar imagens e trata-las
+    '''
+    def __init__(self, pxInicial, pyInicial, *grupos):
+        Sprite.__init__(self, *grupos)
+        self.pxInicial = pxInicial
+        self.pyInicial = pyInicial
+        self.px = 0
+        self.py = 0
+        self.rect = Rect(self.pxInicial, self.pyInicial, 0, 0)
+        global listaImagensFrente, listaImagensCostas, listaImagensLadoDireito, listaImagensLadoEsquerdo
+        self.image = pygame.image.load(listaImagensLadoDireito[0])
+        self.image.set_alpha(None, RLEACCEL)  # disable alpha
+        self.image.convert()
+        self.image.set_colorkey(magenta, RLEACCEL)
+        pygame.draw.rect(self.image, preto, self)
 
-filaF, filaC, filaE, filaD = 0, 0, 0, 0
+    def mover(self, x, y):
+        self.rect.move_ip(x, y)
 
-# mover personagem para a esquerda
-
-
-def MPE():
-    global filaE
-    if teclas[K_LEFT] and not teclas[K_DOWN] and not teclas[K_UP]:
-        personagem.image = pygame.image.load(listaImagensLadoEsquerdo[filaE])
-        personagem.converterImagem()
-        personagem.mover(-10, 0)
-        personagem.px -= 1
-        filaE += 1
-        if filaE > 2:
-            filaE = 0
-    print(filaE)
-#mover personagem para a direita
-
-
-def MPD():
-    global filaD
-    if teclas[K_RIGHT] and not teclas[K_DOWN] and not teclas[K_UP]:
-        personagem.image = pygame.image.load(listaImagensLadoDireito[filaD])
-        personagem.converterImagem()
-        personagem.mover(10, 0)
-        personagem.px += 1
-        filaD += 1
-        if filaD > 2:
-            filaD = 0
-
-# mover personagem para cima
+    def converterImagem(self):
+        self.image.set_alpha(None, RLEACCEL)  # disable alpha
+        self.image.convert()
+        self.image.set_colorkey(magenta, RLEACCEL)
 
 
-def MPC():
-    global filaC
-    if teclas[K_UP]:
-        personagem.image = pygame.image.load(listaImagensCostas[filaC])
-        personagem.converterImagem()
-        personagem.mover(0, -10)
-        personagem.py -= 1
-        filaC += 1
-        if filaC > 2:
-            filaC = 0
+class Npcs(Sprite):
+    def __init__(self, posX, posY, arquivoDeImagem, *grupos):
+        self.posX = posX
+        self.posY = posY
+        Sprite.__init__(self, *grupos)
+        self.rect = Rect(self.posX, self.posY, 0, 0)
+        self.image = pygame.image.load(arquivoDeImagem)
+        self.image.set_alpha(None, RLEACCEL)  # disable alpha
+        self.image.convert()
+        self.image.set_colorkey(magenta, RLEACCEL)
+        pygame.draw.rect(self.image, preto, self)
 
-# mover personagem para baixo
+    def converterImagem(self):
+        self.image.set_alpha(None, RLEACCEL)  # disable alpha
+        self.image.convert()
+        self.image.set_colorkey(magenta, RLEACCEL)
 
-
-def MPB():
-    global filaF
-    if teclas[K_DOWN]:
-        personagem.image = pygame.image.load(listaImagensFrente[filaF])
-        personagem.converterImagem()
-        personagem.mover(0, 10)
-        personagem.py += 1
-        filaF += 1
-        if filaF > 2:
-            filaF = 0
-
-#=======================
-
-fundo, tela, clock = config()
-
-#================================
-#Criação de objetos
-musica = pygame.mixer.Sound("BGM/Firelink Shrine.wav")
-grupo = RenderUpdates()
-personagem = Personagem(20, 290, grupo)
-npc = Npcs(650, 290, "sprites/personagem2.png", grupo)
-npc.converterImagem()
-
-npc2 = Npcs(675, 240, "sprites/personagem.png", grupo)
-npc2.converterImagem()
-
-npc3 = Npcs(675, 340, "sprites/personagem.png", grupo)
-npc3.converterImagem()
-frase = Textos(40, 'Quem é voce e oque faz aqui?', 'carolingia.ttf')
-pygame.font.init()
-#===================================
-
-lx = [b for b in range(-4, 76)]
-l1 = [-10]
-l2 = [6]
-
-#parede esquerda
-parede = [x for x in range(-10, 16)]
-colisaoParedeLateral = Eventos(parede, -2)
+# classe que gerencia as frases do jogo
 
 
-#===================================
-iniciarConversa = [43, 0]
+class Textos():
+    '''
+    Classe que gerencia todos os textos do jogo.
+    '''
 
-teclas = {K_LEFT: False, K_RIGHT: False, K_UP: False, K_DOWN: False,
-          K_RETURN: False, 27: False}  # obs 27 = tecla 'esc'
-musica.play()
-fundo = fundo.convert()
-pygame.display.flip()
-while True:
-    clock.tick(FPS)
+    def __init__(self, tamanho, dialogo, arquivoDeFonte, cor=branco, antialias=True):  # antialias faz um tratamento na imagem
+        #pygame.font.init()
+        self.tamanho = tamanho  # tamanho da frase
+        self.dialogo = dialogo  # frase
+        self.cor = cor  # cor
+        self.antialias = antialias
+        self.fonte = pygame.font.SysFont(arquivoDeFonte, self.tamanho)
+        self.frases = self.fonte.render(
+            self.dialogo, self.antialias, self.cor)
 
-    for e in pygame.event.get([KEYUP, KEYDOWN]):
-        valor = (e.type == KEYDOWN)
-        if e.key in teclas.keys():
-            teclas[e.key] = valor
+    def alterarDialogo(self, novodialogo):
+        self.dialogo = novodialogo
 
-    if teclas[27]:
-        pygame.quit()
-        sys.exit()
-    if  colisaoParedeLateral.estaDentro(personagem.py, personagem.px):
-        MPD()
-        MPB()
-        MPC()
-    elif personagem.px in lx:
-        if personagem.py in l1:
-            MPB()
-            MPD()
-            MPE()
-        elif personagem.py in l2:
-            MPC()
-            MPD()
-            MPE()
-        else:
-            MPE()
-            MPD()
-            MPC()
-            MPB()
+    def alterarCor(self, novaCor):
+        self.cor = novaCor
 
-    if personagem.px == iniciarConversa[0]:
-        if personagem.py == iniciarConversa[1]:
-            tela.blit(frase.frases, (200, 500))
-            pygame.display.flip()
+    def alterarTamanho(self, novoTamanho):
+        self.tamanho = novoTamanho
 
-    print(personagem.px, personagem.py)
 
-    grupo.clear(tela, fundo)
-    pygame.display.update(grupo.draw(tela))
+class Eventos():
+    '''
+    Classe que gerencia todos os eventos do jogo
+    '''
+
+    def __init__(self, py, px):
+        self.px = px
+        self.py = py
+
+    def estaDentro(self, pontoY, pontoX):
+        if pontoY in self.py and pontoX == self.px:
+            return True
+        return False
