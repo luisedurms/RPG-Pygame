@@ -60,8 +60,6 @@ class Npcs(Sprite):
         self.image.convert()
         self.image.set_colorkey(magenta, RLEACCEL)
 
-# classe que gerencia as frases do jogo
-
 
 class Textos():
     '''
@@ -74,10 +72,9 @@ class Textos():
         self.dialogo = dialogo  # frase
         self.cor = cor  # cor
         self.antialias = antialias
-        self.fonte = pygame.font.SysFont(arquivoDeFonte ,self.tamanho)
+        self.fonte = pygame.font.SysFont(arquivoDeFonte, self.tamanho)
         self.frases = self.fonte.render(
             self.dialogo, self.antialias, self.cor)
-
 
     def alterarDialogo(self, novodialogo):
         self.dialogo = novodialogo
@@ -91,14 +88,25 @@ class Textos():
 
 class Eventos():
     '''
-    Classe que gerencia todos os eventos do jogo
+    Classe que gerencia os eventos do jogo
     '''
 
     def __init__(self, py, px):
         self.px = px
         self.py = py
-    
+
     def estaDentro(self, pontoY, pontoX):
         if pontoY in self.py and pontoX == self.px:
             return True
         return False
+
+
+'''class PontosDeColisao():
+
+    def __init__(self, px, py):
+        self.px = px
+        self.py = py
+
+    def Colidiu(self, pontoX, pontoY):
+      if pontoX
+'''
